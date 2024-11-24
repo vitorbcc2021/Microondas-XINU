@@ -1,16 +1,15 @@
 #include <xinu.h>
 
-// Declaração das funções
 int lerInteiro(void);
 void controlarLuz(int ligar);
 void tracaoPrato(int girar);
 
 typedef struct {
-    int tempo;         // Tempo de cozimento em segundos
-    int potencia;      // Potência do Klystron (0-100%)
-    int portaAberta;   // Status da porta
-    int luzLigada;     // Status da luz interna
-    int pratoGirando;  // Status do prato giratório
+    int tempo;
+    int potencia;
+    int portaAberta;
+    int luzLigada;
+    int pratoGirando;
 } Microondas;
 
 Microondas microondas;
@@ -40,23 +39,22 @@ void iniciarCozimento() {
         return;
     }
 
-    kprintf("Iniciando cozimento: Tempo = %d segundos, Potência = %d%%.\n",
-           microondas.tempo, microondas.potencia);
+    kprintf("Iniciando cozimento: Tempo = %d segundos, Potência = %d%%.\n", microondas.tempo, microondas.potencia);
 
-    controlarLuz(1);       // Liga a luz interna
-    tracaoPrato(1);        // Inicia o prato giratório
+    controlarLuz(1);
+    tracaoPrato(1);
 
     int i;
     for (i = 0; i < microondas.tempo; i++) {
         kprintf("Cozinhando... (%d/%d segundos)\n", i + 1, microondas.tempo);
-        sleepms(1000);  // Substituindo sleep(1) por sleepms(1000)
+        sleepms(1000);
     }
 
-    controlarLuz(0);       // Desliga a luz interna
-    tracaoPrato(0);        // Para o prato giratório
+    controlarLuz(0);
+    tracaoPrato(0);
     kprintf("Cozimento concluído!\n");
 
-    microondas.tempo = 0;  // Reset após o ciclo
+    microondas.tempo = 0;
 }
 
 void programaCozimento() {
@@ -73,22 +71,22 @@ void programaCozimento() {
     escolha = lerInteiro();
 
     switch (escolha) {
-        case 1: // Carne
+        case 1:
             especificarCiclo(300, 80);
             break;
-        case 2: // Peixe
+        case 2:
             especificarCiclo(200, 70);
             break;
-        case 3: // Frango
+        case 3:
             especificarCiclo(250, 75);
             break;
-        case 4: // Lasanha
+        case 4:
             especificarCiclo(400, 90);
             break;
-        case 5: // Pipoca
+        case 5:
             especificarCiclo(120, 100);
             break;
-        case 6: // Manual
+        case 6:
             kprintf("Digite o tempo de cozimento (segundos): ");
             tempo = lerInteiro();
             kprintf("Digite a potência do Klystron (0-100%%): ");
@@ -126,20 +124,18 @@ int lerInteiro() {
     int valor = 0;
     int sinal = 1;
 
-    // Lê o caractere e verifica se é um sinal de negativo
     c = getc(stdin);
     if (c == '-') {
         sinal = -1;
-        c = getc(stdin); // Pega o próximo caractere
+        c = getc(stdin);
     }
 
-    // Lê os caracteres numéricos e monta o número
     while (c >= '0' && c <= '9') {
         valor = valor * 10 + (c - '0');
-        c = getc(stdin); // Lê o próximo caractere
+        c = getc(stdin);
     }
 
-    return valor * sinal; // Retorna o número com o sinal correto
+    return valor * sinal;
 }
 
 process main() {
@@ -147,9 +143,9 @@ process main() {
     kprintf("Sistema de Microondas Iniciado.\n");
 
     while (1) {
-        programaCozimento(); // Menu interativo
+        programaCozimento();
         kprintf("Deseja realizar outro ciclo? (1 para sim, 0 para não): ");
-        int continuar = lerInteiro();  // Lê a escolha do usuário
+        int continuar = lerInteiro();
         if (continuar == 0) {
             break;
         } else if (continuar != 1) {
